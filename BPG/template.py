@@ -738,7 +738,7 @@ class PhotonicTemplateBase(TemplateBase, metaclass=abc.ABCMeta):
                     layer=old_port.layer,
                     unit_mode=True,
                     show=show,
-                    info=info,
+                    info=old_port.info,
                 )
             )
 
