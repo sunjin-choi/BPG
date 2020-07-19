@@ -2,7 +2,6 @@ from BPG.geometry import Transformable2D
 
 from typing import TYPE_CHECKING, Tuple
 import numpy as np
-from bag.layout.util import transform_point, transform_loc_orient
 
 if TYPE_CHECKING:
     from BPG.bpg_custom_types import dim_type, coord_type, lpp_type, layer_or_lpp_type
@@ -21,6 +20,7 @@ class PhotonicPort(Transformable2D):
                  mirrored: bool = False,
                  force_cardinal: bool = False,
                  unit_mode: bool = False,
+                 info: dict = None,
                  ) -> None:
         """Creates a new PhotonicPort object
 
@@ -44,9 +44,10 @@ class PhotonicPort(Transformable2D):
             True if the port orientation is mirrored. Defaults to False.
         force_cardinal : bool
             Tracks whether the angle is cardinal and should be snapped to 90deg where applicable
-
         unit_mode : bool
             True if layout dimensions are specified in resolution units
+        info : dict
+            A dictionary that can contain additional information that should be stored / associated with a PhotonicPort
 
         """
         # Set up _resolution, _mod_angle, _center_unit, _orient, _is_cardinal
@@ -73,6 +74,11 @@ class PhotonicPort(Transformable2D):
         else:
             self._width_unit = int(round(width / self.resolution))
 
+        if info is None:
+            self.info = dict()
+        else:
+            self.info = info
+
     def __repr__(self):
         return (f'PhotonicPort(name={self.name}, layer=({self.layer}), location=({self.center}), '
                 f'angle={np.rad2deg(self.angle)} deg')
@@ -90,7 +96,8 @@ class PhotonicPort(Transformable2D):
             resolution=self.resolution,
             angle=self.mod_angle,
             mirrored=self.mirrored,
-            unit_mode=True
+            unit_mode=True,
+            info=self.info,
         )
 
     @property
